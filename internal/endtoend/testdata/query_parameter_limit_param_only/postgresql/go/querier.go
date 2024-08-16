@@ -12,7 +12,7 @@ import (
 
 type Querier interface {
 	CreateNotice(ctx context.Context, cnt int32, createdAt time.Time) error
-	MarkNoticeDone(ctx context.Context, noticeAt sql.NullTime, iD int32) error
+	MarkNoticeDone(ctx context.Context, noticeAt sql.NullTime, id int32) error
 }
 
 var _ Querier = (*Queries)(nil)

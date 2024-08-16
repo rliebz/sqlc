@@ -27,7 +27,7 @@ SET status='done', notice_at=$1
 WHERE id=$2
 `
 
-func (q *Queries) MarkNoticeDone(ctx context.Context, noticeAt sql.NullTime, iD int32) error {
-	_, err := q.db.ExecContext(ctx, markNoticeDone, noticeAt, iD)
+func (q *Queries) MarkNoticeDone(ctx context.Context, noticeAt sql.NullTime, id int32) error {
+	_, err := q.db.ExecContext(ctx, markNoticeDone, noticeAt, id)
 	return err
 }

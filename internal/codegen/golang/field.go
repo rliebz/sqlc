@@ -5,6 +5,7 @@ import (
 	"regexp"
 	"sort"
 	"strings"
+	"unicode"
 
 	"github.com/sqlc-dev/sqlc/internal/codegen/golang/opts"
 	"github.com/sqlc-dev/sqlc/internal/plugin"
@@ -134,10 +135,45 @@ func toJsonCamelCase(name string, idUppercase bool) string {
 	return out
 }
 
+// toLowerCase makes the first word in a camelcase word lowercase, accounting
+// for initialisms.
 func toLowerCase(str string) string {
 	if str == "" {
 		return ""
 	}
 
-	return strings.ToLower(str[:1]) + str[1:]
+	inFirstWord := true
+	var last rune
+
+	var b strings.Builder
+	b.Grow(len(str))
+	for i, r := range str {
+		if !inFirstWord {
+			b.WriteRune(r)
+			continue
+		}
+
+		if !unicode.IsUpper(r) {
+			inFirstWord = false
+			if i == 1 {
+				b.WriteRune(unicode.ToLower(last))
+			} else if i != 0 {
+				b.WriteRune(last)
+			}
+			b.WriteRune(r)
+			continue
+		}
+
+		if i != 0 {
+			b.WriteRune(unicode.ToLower(last))
+		}
+
+		last = r
+	}
+
+	if inFirstWord {
+		b.WriteRune(unicode.ToLower(last))
+	}
+
+	return b.String()
 }

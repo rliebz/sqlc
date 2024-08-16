@@ -22,8 +22,8 @@ INSERT INTO clients (
 RETURNING id, name
 `
 
-func (q *Queries) AddNewClient(ctx context.Context, iD int32, name string) (Client, error) {
-	row := q.db.QueryRowContext(ctx, addNewClient, iD, name)
+func (q *Queries) AddNewClient(ctx context.Context, id int32, name string) (Client, error) {
+	row := q.db.QueryRowContext(ctx, addNewClient, id, name)
 	var i Client
 	err := row.Scan(&i.ID, &i.Name)
 	return i, err
